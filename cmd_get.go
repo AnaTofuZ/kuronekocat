@@ -31,11 +31,16 @@ func execGetCmd(_ *cobra.Command, arg []string) error {
 	return nil
 }
 
-func showTable(fields [][tnekoRecord]string) {
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader(fields[0][:])
-	for _, v := range fields[1:] {
-		table.Append(v[:])
+func showTable(infos *parsedInfoType) {
+	header := infos.headers
+	fields := infos.orders
+
+	for _, order := range fields {
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetHeader(header[:])
+		for _, v := range order[:] {
+			table.Append(v[:])
+		}
+		table.Render()
 	}
-	table.Render()
 }

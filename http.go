@@ -13,9 +13,16 @@ import (
 )
 
 const tnekoURL = "https://toi.kuronekoyamato.co.jp/cgi-bin/tneko"
-const tnekoRecord = 6
+const tnekoRecord = 7
+const numberIDIndex = 0
+const statusIndex = 1
 
-func getFromTneko(numbers []string) ([][tnekoRecord]string, error) {
+type parsedInfoType struct {
+	headers [tnekoRecord]string
+	orders  [][][tnekoRecord]string
+}
+
+func getFromTneko(numbers []string) (*parsedInfoType, error) {
 	content, err := postHTTP(numbers)
 	if err != nil {
 		return nil, err
@@ -25,27 +32,38 @@ func getFromTneko(numbers []string) ([][tnekoRecord]string, error) {
 
 	meisaiContents := doc.FindAll("table", "class", "meisai")
 
-	var fields [][tnekoRecord]string
-	var headers [tnekoRecord]string
+	parsedInfo := parsedInfoType{}
+	headers := &parsedInfo.headers
+	var fields [][][tnekoRecord]string
+
 	for i, meisaiHeader := range meisaiContents[0].FindAll("tr")[0].FindAll("th") {
-		headers[i] = meisaiHeader.Text()
+		headers[i+1] = meisaiHeader.Text()
 	}
-	headers[0] = "#"
-	fields = append(fields, headers)
+	headers[statusIndex] = "#"
+	headers[numberIDIndex] = "注文番号"
 
-	for _, tr := range meisaiContents[0].FindAll("tr")[1:] {
-		morimori := tr.FindAll("td")
-		var field [tnekoRecord]string
-		for i, mm := range morimori {
-			field[i] = mm.FullText()
+	for n, order := range meisaiContents {
+		var eachFields [][tnekoRecord]string
+		for _, tr := range order.FindAll("tr")[1:] {
+			morimori := tr.FindAll("td")
+			var field [tnekoRecord]string
+			for i, mm := range morimori {
+				field[i+1] = mm.FullText()
+			}
+			field[statusIndex] = "↓"
+			field[numberIDIndex] = numbers[n]
+			eachFields = append(eachFields, field)
 		}
-		field[0] = "↓"
-		fields = append(fields, field)
+		fields = append(fields, eachFields)
 	}
 
-	lastIndexMeisanContents := len(fields) - 1
-	fields[lastIndexMeisanContents][0] = "□"
-	return fields, nil
+	for i, eachFields := range fields {
+		lastIndexMeisanContents := len(eachFields) - 1
+		fields[i][lastIndexMeisanContents][statusIndex] = "□"
+	}
+	parsedInfo.orders = fields
+
+	return &parsedInfo, nil
 }
 
 func postHTTP(numbers []string) (string, error) {
