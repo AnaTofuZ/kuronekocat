@@ -1,0 +1,41 @@
+package kuronekocat
+
+import (
+	"os"
+
+	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
+)
+
+func newGetCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "get [ids,...]",
+		Short: "get kuroneko infomations",
+
+		RunE: execGetCmd,
+	}
+	return cmd
+}
+
+func execGetCmd(_ *cobra.Command, arg []string) error {
+	orderNumbers := arg
+	if len(orderNumbers) == 0 {
+		orderNumbers = []string{"11111"}
+	}
+
+	fields, err := getFromTneko(orderNumbers)
+	if err != nil {
+		return err
+	}
+	showTable(fields)
+	return nil
+}
+
+func showTable(fields [][tnekoRecord]string) {
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader(fields[0][:])
+	for _, v := range fields[1:] {
+		table.Append(v[:])
+	}
+	table.Render()
+}
