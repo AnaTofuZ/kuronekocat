@@ -19,15 +19,27 @@ func newGetCmd() *cobra.Command {
 
 func execGetCmd(_ *cobra.Command, arg []string) error {
 	orderNumbers := arg
+	var explains []string
 	if len(orderNumbers) == 0 {
-		orderNumbers = []string{"11111"}
+		orders, err := readFromHomeJSON()
+		if err != nil {
+			return err
+		}
+		for _, ord := range orders {
+			orderNumbers = append(orderNumbers, ord.ID)
+			explains = append(explains, ord.Explain)
+		}
 	}
 
 	fields, err := getFromTneko(orderNumbers)
 	if err != nil {
 		return err
 	}
-	showTable(fields)
+	if len(explains) == 0 {
+		showTable(fields)
+	} else {
+		showTableWExplain(fields, explains)
+	}
 	return nil
 }
 
@@ -35,12 +47,31 @@ func showTable(infos *parsedInfoType) {
 	header := infos.headers
 	fields := infos.orders
 
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader(header[:])
+	table.SetAutoMergeCellsByColumnIndex([]int{0})
+	table.SetRowLine(true)
 	for _, order := range fields {
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader(header[:])
 		for _, v := range order[:] {
 			table.Append(v[:])
 		}
-		table.Render()
 	}
+	table.Render()
+}
+
+func showTableWExplain(infos *parsedInfoType, explains []string) {
+	header := infos.headers[:]
+	fields := infos.orders
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader(append([]string{"品物"}, header...))
+	table.SetAutoMergeCellsByColumnIndex([]int{0, 1})
+	table.SetRowLine(true)
+	for i, order := range fields {
+		for _, v := range order[:] {
+			feeld := v[:]
+			table.Append(append([]string{explains[i]}, feeld...))
+		}
+	}
+	table.Render()
 }

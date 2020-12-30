@@ -40,7 +40,7 @@ func getFromTneko(numbers []string) (*parsedInfoType, error) {
 		headers[i+1] = meisaiHeader.Text()
 	}
 	headers[statusIndex] = "#"
-	headers[numberIDIndex] = "注文番号"
+	headers[numberIDIndex] = "伝票番号"
 
 	for n, order := range meisaiContents {
 		var eachFields [][tnekoRecord]string
