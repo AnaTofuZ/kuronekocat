@@ -65,7 +65,7 @@ func showTableWExplain(infos *parsedInfoType, explains []string) {
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader(append([]string{"品物"}, header...))
-	table.SetAutoMergeCellsByColumnIndex([]int{0, 1})
+	table.SetAutoMergeCellsByColumnIndex([]int{0, 1}) // (0, 1 ) == (itemName, orderNumber)
 	table.SetRowLine(true)
 	for i, order := range fields {
 		for _, v := range order[:] {
