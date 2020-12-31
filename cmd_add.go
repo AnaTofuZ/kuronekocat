@@ -12,7 +12,7 @@ var addQuery = order{}
 func newAddCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "add --number 4233-999-888 --info computer",
-		Short: "キューにクロネコヤマトの品物を追加します",
+		Short: "Adds Kuroneko Yamato items to the ordered queue",
 
 		RunE: addCmd,
 	}

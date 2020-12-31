@@ -10,7 +10,7 @@ import (
 func newGetCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "get [numbers,...]",
-		Short: "クロネコヤマトの追跡情報を取得します",
+		Short: "Get tracking information of Kuroneko Yamato",
 
 		RunE: execGetCmd,
 	}

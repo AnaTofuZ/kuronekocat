@@ -6,14 +6,10 @@ import (
 
 const cmdName = "kuronekocat"
 
-var rootCmd = &cobra.Command{
-	Use:  cmdName,
-	Long: "クロネコヤマトから情報をとるくん",
-}
-
 func NewKuronekoCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use: "kuronekocat",
+		Use:  cmdName,
+		Long: "Kuroneko Yamato Tracking Wrapper Tool",
 	}
 
 	cmd.AddCommand(

@@ -10,7 +10,7 @@ import (
 func newQueueCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "queue",
-		Short: "今溜まっている品物一覧を表示",
+		Short: "List current ordered queues",
 
 		RunE: execQueueCmd,
 	}
