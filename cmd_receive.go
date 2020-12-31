@@ -10,7 +10,7 @@ import (
 func newReceiveCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "receive [id or explain]",
-		Short: "get kuroneko infomations",
+		Short: "受け取った品物をキューから削除します",
 
 		Args: cobra.MinimumNArgs(1),
 
