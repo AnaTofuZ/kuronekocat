@@ -15,7 +15,7 @@ func NewKuronekoCmd() *cobra.Command {
 	cmd.AddCommand(
 		newGetCmd(),
 		newAddCmd(),
-		newQueueCmd(),
+		newListCmd(),
 		newReceiveCmd(),
 	)
 

@@ -7,17 +7,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newQueueCmd() *cobra.Command {
+func newListCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "queue",
+		Use:   "ls",
 		Short: "List current ordered queues",
 
-		RunE: execQueueCmd,
+		RunE: execListCmd,
 	}
 	return cmd
 }
 
-func execQueueCmd(_ *cobra.Command, arg []string) error {
+func execListCmd(_ *cobra.Command, arg []string) error {
 	orders, err := readFromHomeJSON()
 	if err != nil {
 		return err
