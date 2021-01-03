@@ -2,6 +2,23 @@
 
 クロネコヤマトの追跡ツール
 
+# install
+
+## go get
+
+```shell
+go get -u github.com/AnaTofuZ/kuronekocat/cmd/kuronekocat
+```
+
+## brew
+
+```shell
+$brew install anatofuz/kuronekocat/kuronekocat
+```
+
+
+# command
+
 
 ## get
 
